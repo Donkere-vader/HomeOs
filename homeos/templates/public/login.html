@@ -1,23 +1,23 @@
 {% extends 'public/template.html' %}
 
 {% block content %}
-<main>
-    <div class="card">
-        <form method="POST">
-            <h3>Login</h3>
+<main class="center-center">
+    <form class="form card" method="POST">
+        <h3>Login</h3>
 
-            {% if error %}
-            <span>{{ error }}</span>
-            {% endif %}
+        {% if error %}
+        <span>{{ error }}</span>
+        {% endif %}
 
-            <label for="username_input">Username</label>
-            <input type="text" name="username" id="username_input" placeholder="username">
+        <label for="username_input">Username</label>
+        <input type="text" name="username" id="username_input" placeholder="Username" autocomplete="off">
 
-            <label for="password_input">password</label>
-            <input type="password" name="password" id="password_input" placeholder="password">
+        <label for="password_input">Password</label>
+        <input type="password" name="password" id="password_input" placeholder="Password" autocomplete="off">
 
-            <input type="submit" value="Login">
-        </form>
-    </div>
+        <div style="height: 10px"></div>
+
+        <input class="submit" type="submit" value="Login">
+    </form>
 </main>
 {% endblock content %}

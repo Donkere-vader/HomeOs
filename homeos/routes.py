@@ -44,7 +44,7 @@ def login():
 @app.route("/logout")
 @login_required
 def logout():
-    logout_user(current_user)
+    logout_user()
     return redirect("../../../../login")
 
 

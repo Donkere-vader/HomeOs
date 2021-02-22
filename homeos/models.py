@@ -53,17 +53,18 @@ class Device(db.Model):
     control = db.Column(db.String(45))
     group = db.Column(db.String(45))
     room = db.Column(db.String(45))
+    active = db.Column(db.Boolean)
+
+    # visual
+    # Color of the tile in the dashboard (can be color of light)
+    _color = db.Column(db.Integer)  # HEX VALUE
 
     # dashboard
     name = db.Column(db.String(45))
     description = db.Column(db.Text(100))
 
-    # if controlled over Wifi
     api_key = db.Column(db.String(45))
     address = db.Column(db.String(45))
-
-    # if controlled over GPI0 pins
-    pin = db.Column(db.String(45))
 
     def __init__(self, id, icon, control, group, room):
         self.id, self.icon, self.control, self.group, self.room = id, icon, control, group, room

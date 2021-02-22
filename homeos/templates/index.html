@@ -5,10 +5,16 @@
     <div class="cards">
     {% for device in devices %}
         <a class="card clickable no-link" href="../../../../dev/{{ device.id }}">
-            <div class="icon-container">
+            <div class="icon-container" style="background-color: {% if device.group == 'light' and device.active %}#{{ device.color }}{% else %}#212121{% endif %}">
                 <img class="icon" src="../../../../../static/media/icons/{{ device.icon }}.svg" alt="">
             </div>
             <div class="card-info">
+                <div class="status">
+                    <div class="circle" style="background-color: {% if device.active %}#8bc34a{% else %}#f44336{% endif %};"></div>
+                    <div style="width: 5px;"></div>
+                    <span  style="color: {% if device.active %}#8bc34a{% else %}#f44336{% endif %};">{% if device.active %}ON{% else %}OFF{% endif %}</span>
+                </div>
+                <div style="height: 5px;"></div>
                 <h3>{{ device.name }}</h3>
                 <p>{{ device.description }}</p>
             </div>

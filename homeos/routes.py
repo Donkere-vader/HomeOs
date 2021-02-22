@@ -1,4 +1,4 @@
-from .models import User
+from .models import User, Device
 from flask import current_app as app
 from flask import render_template, request, redirect, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -23,12 +23,11 @@ def unauth_handler():
 @app.route("/")
 @login_required
 def index():
-    return render_template("index.html")
+    return render_template("index.html", devices=Device.query.all())
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-
     if request.method == "POST":
         username, password = request.form['username'], request.form['password']
 
@@ -52,4 +51,6 @@ def logout():
 @app.route("/dev/<device_id>")
 @login_required
 def dev(device_id):
-    return jsonify(device_id=device_id)
+    device = Device.query.get(device_id)
+
+    return render_template("device.html", device=device)

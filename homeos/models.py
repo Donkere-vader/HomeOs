@@ -2,6 +2,8 @@ from . import db
 from sqlalchemy.sql import func
 from flask_login import UserMixin
 import bcrypt
+from string import ascii_letters
+import random
 
 
 class User(db.Model, UserMixin):
@@ -12,14 +14,13 @@ class User(db.Model, UserMixin):
     """
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    username = db.Column(db.String(40), unique=True)
+    username = db.Column(db.String(45), unique=True)
     password_hash = db.Column(db.LargeBinary())
     is_active = db.Column(db.Boolean)
 
     def __init__(self, username: str, password: str):
         salt = bcrypt.gensalt()
         password_hash = bcrypt.hashpw(password.encode(), salt)
-        print(password_hash)
         self.username, self.password_hash, self.is_active = username, password_hash, True
 
     def get_id(self):
@@ -43,17 +44,35 @@ class Device(db.Model):
     id: ledstrip_1_masterbedroom
     icon: light
     control: node_mcu
+    group: light
+    room: bedroom
     """
 
-    id = db.Column(db.String, primary_key=True)
-    icon = db.Column(db.String)
-    control = db.Column(db.String)
+    id = db.Column(db.String(45), primary_key=True)
+    icon = db.Column(db.String(45))
+    control = db.Column(db.String(45))
+    group = db.Column(db.String(45))
+    room = db.Column(db.String(45))
 
-    address = db.Column(db.String)  # if controlled over WiFi
-    pin = db.Column(db.String)  # if controlled over GPI0 pins
+    # dashboard
+    name = db.Column(db.String(45))
+    description = db.Column(db.Text(100))
 
-    def __init__(self, id, icon, control):
-        self.id, self.icon, self.control = id, icon, control
+    # if controlled over Wifi
+    api_key = db.Column(db.String(45))
+    address = db.Column(db.String(45))
+
+    # if controlled over GPI0 pins
+    pin = db.Column(db.String(45))
+
+    def __init__(self, id, icon, control, group, room):
+        self.id, self.icon, self.control, self.group, self.room = id, icon, control, group, room
+
+        # generate an API key
+        aplphabet = list(ascii_letters)
+        self.api_key = "".join([random.choice(aplphabet) for _ in range(45)])
+        while Device.query.filter_by(api_key=self.api_key).first() is not None:
+            self.api_key = "".join([random.choice(aplphabet) for _ in range(45)])
 
     def send(self, data):
         """
@@ -66,3 +85,11 @@ class Device(db.Model):
         """
 
         pass  # TODO
+
+    def recieve(self, data):
+        """
+        Handle recieved data from device
+
+        Data will be recieved through the API. The device will pass with its device_id string so that the correct function can be executed.
+        """
+        pass

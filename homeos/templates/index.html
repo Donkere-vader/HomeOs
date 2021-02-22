@@ -3,15 +3,17 @@
 {% block content %}
 <main>
     <div class="cards">
-        <a class="card clickable no-link" href="../../../../dev/led_bedroom_south">
+    {% for device in devices %}
+        <a class="card clickable no-link" href="../../../../dev/{{ device.id }}">
             <div class="icon-container">
-                <img class="icon" src="../../../../../static/media/icons/lamp.svg" alt="">
+                <img class="icon" src="../../../../../static/media/icons/{{ device.icon }}.svg" alt="">
             </div>
             <div class="card-info">
-                <h3>Ledstrip bedroom Cas</h3>
-                <p>Led strip/ wake light in bedroom Cas.</p>
+                <h3>{{ device.name }}</h3>
+                <p>{{ device.description }}</p>
             </div>
         </a>
+    {% endfor %}
     </div>
 </main>
 {% endblock content %}

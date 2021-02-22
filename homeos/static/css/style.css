@@ -160,13 +160,13 @@ main {
 }
 
 @media only screen and (max-width: 610px) {
-    .cards {
+    .device-cards {
         grid-template-columns: 1fr 1fr;
     }
 }
 
 @media only screen and (max-width: 500px) {
-    .cards {
+    .device-cards {
         grid-template-columns: 1fr;
     }
 }

@@ -2,10 +2,10 @@
 
 {% block content %}
 <main>
-    <div class="cards">
+    <div class="device-cards">
     {% for device in devices %}
-        <a class="card clickable no-link" href="../../../../dev/{{ device.id }}">
-            <div class="icon-container" style="background-color: {% if device.group == 'light' and device.active %}#{{ device.color }}{% else %}#212121{% endif %}">
+        <a class="device-card clickable no-link" href="../../../../dev/{{ device.id }}">
+            <div class="icon-container" style="background-color: {% if device.active %}#{{ device.color }}{% else %}#212121{% endif %}">
                 <img class="icon" src="../../../../../static/media/icons/{{ device.icon }}.svg" alt="">
             </div>
             <div class="card-info">

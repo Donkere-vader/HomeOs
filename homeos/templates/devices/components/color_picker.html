@@ -1,0 +1,43 @@
+<div class="color-picker">
+    <div style="height: 20px;"></div>
+    <h4>Color picker</h4>
+    <div style="height: 10px;"></div>
+    <div class="picker-container">
+        <div id="color-picker-trigger" class="clickable"></div>
+        <div style="width: 10px;"></div>
+        <p>Select color</p>
+    </div>
+    <input type="color" name="color" id="color_input" value="#{{ device.color }}" style="display: none;">
+
+</div>
+
+<script>
+    $("#color_input").change(function() {
+        var color = $("#color_input").val();
+        update_color(color);
+        build_color_picker();
+    });
+
+    function build_color_picker() {
+        var color = $("#color_input").val();
+        $("#color-picker-trigger").css("background-color", color);
+    }
+
+    function update_color(color) {
+        var data = {action: "set_color", color: color};
+        console.log(data);
+        $.post(window.location, data).done(function(data) {
+            if ('color' in data) {
+                build_card();
+            }
+        })
+    }
+
+    build_color_picker();
+
+    $("#color-picker-trigger").click(
+        function() {
+            $("#color_input").click();
+        }
+    );
+</script>

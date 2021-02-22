@@ -57,7 +57,7 @@ class Device(db.Model):
 
     # visual
     # Color of the tile in the dashboard (can be color of light)
-    _color = db.Column(db.Integer)  # HEX VALUE
+    color = db.Column(db.Integer)  # HEX VALUE
 
     # dashboard
     name = db.Column(db.String(45))
@@ -94,3 +94,11 @@ class Device(db.Model):
         Data will be recieved through the API. The device will pass with its device_id string so that the correct function can be executed.
         """
         pass
+
+    def turn_on(self):
+        self.active = True
+        db.session.commit()
+
+    def turn_off(self):
+        self.active = False
+        db.session.commit()

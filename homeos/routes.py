@@ -20,6 +20,13 @@ def unauth_handler():
     return redirect("../../../../login")
 
 
+@app.context_processor
+def inject_stage_and_region():
+    return dict(
+        enumerate=enumerate
+    )
+
+
 @app.route("/")
 @login_required
 def index():
@@ -48,9 +55,24 @@ def logout():
     return redirect("../../../../login")
 
 
-@app.route("/dev/<device_id>")
+@app.route("/dev/<device_id>", methods=["GET", "POST"])
 @login_required
 def dev(device_id):
     device = Device.query.get(device_id)
+
+    if request.method == "POST":
+        action = request.form["action"]
+
+        if action == "turn_off":
+            device.turn_off()
+            return jsonify(active=device.active)
+        elif action == "turn_on":
+            device.turn_on()
+            return jsonify(active=device.active)
+
+        elif action == "set_color":
+            device.color = request.form['color'].replace("#", "")
+            db.session.commit()
+            return jsonify(color=device.color)
 
     return render_template("device.html", device=device)

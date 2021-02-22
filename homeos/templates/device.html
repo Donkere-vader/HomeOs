@@ -1,10 +1,68 @@
 {% extends 'template.html' %}
 
 {% block content %}
-<main>
+<link rel="stylesheet" href="../../../../../static/css/device.css">
+
+<main class="horizontal-center">
     <div class="big-card">
-        <h3>{{ device.name }}</h3>
-        <hr>
+        <div id="card-icon-container" class="icon-container">
+            <img class="icon" src="../../../../static/media/icons/{{ device.icon }}.svg" alt="">
+        </div>
+        <div class="card-info">
+            <h3>{{ device.name }}</h3>
+            <hr>
+    
+            <div class="device-control">
+                <button id="toggle-switch" onclick="toggle()"></button>
+            
+                {% include 'devices/components/color_picker.html' %}
+            </div>
+        </div>
+        
     </div>
 </main>
+
+<script>
+    var device_active = {% if device.active %}true{% else %}false{% endif %};
+    var device_color = "{{ device.color }}";
+
+    function get_device_color() {
+        var color_input = $("#color_input");
+        if (color_input.length) { // if color input exists
+            device_color = color_input.val();
+        }
+        return device_color;
+    }
+
+    function build_card() {
+        $("#card-icon-container").css("background-color", device_active ? get_device_color() : "#212121");
+    }
+
+    build_card();
+</script>
+
+<script>
+    var device_active = {% if device.active %}true{% else %}false{% endif %};
+
+    function draw_toggle_button() {
+        var button = $("#toggle-switch");
+        button.html(device_active ? "Turn off" : "Turn on");
+        button.css("background-color", device_active ? "#f44336" : "#8bc34a");
+    }
+
+    function toggle() {
+        var action = device_active ? "turn_off" : "turn_on";
+
+        $.post(window.location, {"action": action}).done(function(data) {
+            if ('active' in data) {
+                console.log(data);
+                device_active = data['active'];
+                draw_toggle_button();
+                build_card();
+            }
+        })
+    }
+
+    draw_toggle_button();
+</script>
 {% endblock content %}

@@ -1,0 +1,12 @@
+# Python
+__pycache__
+
+# Ide
+.vscode
+
+# Project
+*.db
+
+# Personal
+dog.json
+dog

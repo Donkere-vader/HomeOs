@@ -54,10 +54,11 @@
     var device_active = {% if device.active %}true{% else %}false{% endif %};
     var active_program = '{{ device.active_program }}';
 
-    var programs = [
-        'blink',
-        'sos'
-    ];
+    var programs = [];
+
+    {% for program in device.programs %}
+    programs.push('{{ program.name }}');
+    {% endfor %}
 
     function draw_toggle_button() {
         var button = $("#toggle-switch");
@@ -71,7 +72,6 @@
         post(window.location, {"action": action}, function(data) {
             console.log(action);
             if ('active' in data) {
-                console.log(data);
                 device_active = data['active'];
                 draw_toggle_button();
                 build_card();
@@ -105,13 +105,9 @@
     function draw_programs() {
         var programs_html = "";
 
-        console.log(programs);
         programs.forEach(function(item) {
-            console.log(item);
             programs_html += `<button id="${item}_program_button" onclick="start_program('${item}')">${toTitleCase(item)}</button>`;
         });
-
-        console.log(programs_html);
 
         $("#programs").html(programs_html);
         $(`#${active_program}_program_button`).addClass("active");

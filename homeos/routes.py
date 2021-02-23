@@ -73,9 +73,9 @@ def dev(device_id):
         elif action == "set_color":
             succes, message = device.set_color(request.form['color'].replace("#", ""))
             return jsonify(succes=succes, mesesage=message)
-        
+
         elif action == "start_program":
             succes, message = device.start_program(request.form['program'])
-            return jsonify(succes=succes, mesesage=message)
+            return jsonify(succes=succes, mesesage=message, active_program=device.active_program)
 
     return render_template("device.html", device=device)

@@ -70,7 +70,7 @@ class Device(db.Model):
 
     # relationships
     active_program = db.Column(db.String(45))
-    programs = db.relationships('program', backref='device', lazy=True)
+    programs = db.relationship('Program', backref='device', lazy=True)
 
     def __init__(self, id, icon, control, group, room):
         self.id, self.icon, self.control, self.group, self.room = id, icon, control, group, room
@@ -125,7 +125,7 @@ class Device(db.Model):
         self.active = on
         db.session.commit()
         return succes, ""
-    
+
     def set_color(self, color: str) -> bool:
         if self.group == 'light':
             succes, message = self.send(

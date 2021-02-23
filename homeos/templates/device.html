@@ -16,6 +16,14 @@
                 <button id="toggle-switch" onclick="toggle()"></button>
             
                 {% include 'devices/components/color_picker.html' %}
+
+                <div id="program-selector">
+                    <div style="height: 20px;"></div>
+                    <h4>Program selector</h4>
+                    <div style="height: 10px;"></div>
+                    <button onclick="start_program('blink')">Blink</button>
+                    <button onclick="start_program('sos')">Sos</button>
+                </div>
             </div>
         </div>
         
@@ -53,7 +61,8 @@
     function toggle() {
         var action = device_active ? "turn_off" : "turn_on";
 
-        $.post(window.location, {"action": action}).done(function(data) {
+        post(window.location, {"action": action}, function(data) {
+            console.log(action);
             if ('active' in data) {
                 console.log(data);
                 device_active = data['active'];
@@ -64,5 +73,12 @@
     }
 
     draw_toggle_button();
+
+    function start_program(program_name) {
+        if (!device_active) {
+            toggle();
+        }
+        post(window.location, {"action": "start_program", "program": program_name}, function(data) {});
+    }
 </script>
 {% endblock content %}

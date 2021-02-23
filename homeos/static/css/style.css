@@ -115,6 +115,22 @@ main {
     margin-bottom: 5px;
 }
 
+/* ERROR */
+#error-message-popup {
+    background-color: rgb(228, 61, 61);
+    max-width: 400px;
+    padding: 10px;
+    border-radius: 3px;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+#error-message {
+    font-weight: bold;
+}
+
 /* BASIC */
 .no-link {
     color: #FFFFFF;
@@ -137,6 +153,8 @@ main {
     align-items: center;
 }
 
+
+/* RESPONSIVENESS */
 @media only screen and (max-width: 1200px) {
     main {
         margin: 20px 200px;

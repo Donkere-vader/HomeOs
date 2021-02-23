@@ -64,15 +64,18 @@ def dev(device_id):
         action = request.form["action"]
 
         if action == "turn_off":
-            device.turn_off()
-            return jsonify(active=device.active)
+            succes, message = device.power(False)
+            return jsonify(succes=succes, message=message, active=device.active)
         elif action == "turn_on":
-            device.turn_on()
-            return jsonify(active=device.active)
+            succes, message = device.power(True)
+            return jsonify(succes=succes, message=message, active=device.active)
 
         elif action == "set_color":
-            device.color = request.form['color'].replace("#", "")
-            db.session.commit()
-            return jsonify(color=device.color)
+            succes, message = device.set_color(request.form['color'].replace("#", ""))
+            return jsonify(succes=succes, mesesage=message)
+        
+        elif action == "start_program":
+            succes, message = device.start_program(request.form['program'])
+            return jsonify(succes=succes, mesesage=message)
 
     return render_template("device.html", device=device)

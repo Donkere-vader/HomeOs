@@ -13,7 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"> 
 
     <!-- SCRIPTS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../../../../static/js/server.js"></script>
 
     <title>HomeOs</title>
 </head>
@@ -29,5 +30,18 @@
 
     {% block content %}
     {% endblock content %}
+
+    <div id="error-message-popup">
+        <span id="error-message"></span>
+    </div>
+
+    <script>
+        $("#error-message-popup").hide();
+
+        function show_error(message) {
+            $("#error-message").html(message);
+            $("#error-message-popup").fadeIn().delay(5000).fadeOut();
+        }
+    </script>
 </body>
 </html>

@@ -4,6 +4,8 @@ from flask_login import UserMixin
 import bcrypt
 from string import ascii_letters
 import random
+import requests
+import json
 
 
 class User(db.Model, UserMixin):
@@ -75,7 +77,7 @@ class Device(db.Model):
         while Device.query.filter_by(api_key=self.api_key).first() is not None:
             self.api_key = "".join([random.choice(aplphabet) for _ in range(45)])
 
-    def send(self, data):
+    def send(self, action, data):
         """
         Send to device.
 
@@ -84,8 +86,20 @@ class Device(db.Model):
 
         For a ledstrip you would maybe want an action when "rainbow" gets sent to the device.
         """
+        req_data = {
+            "apikey": self.api_key,
+            "action": action,
+            "action_data": json.dumps(data)
+        }
 
-        pass  # TODO
+        try:
+            req = requests.post(
+                f"{self.address}/api/",
+                req_data
+            )
+        except requests.exceptions.ConnectionError:
+            return False, f"Can't connect to device '{self.name}'"
+        return True, ""
 
     def recieve(self, data):
         """
@@ -95,10 +109,40 @@ class Device(db.Model):
         """
         pass
 
-    def turn_on(self):
-        self.active = True
-        db.session.commit()
+    def power(self, on: bool):
+        succes, message = self.send(
+            action="turn_on" if on else "turn_off",
+            data={}
+        )
 
-    def turn_off(self):
-        self.active = False
+        if not succes:
+            return succes, message
+
+        self.active = on
         db.session.commit()
+        return succes, ""
+    
+    def set_color(self, color: str) -> bool:
+        if self.group == 'light':
+            succes, message = self.send(
+                action="set_color",
+                data={"color": color}
+            )
+
+            if not succes:
+                return succes, message
+
+        self.color = color
+        db.session.commit()
+        return True, ""
+
+    def start_program(self, program_name):
+        succes, message = self.send(
+            action="start_program",
+            data={"program": program_name}
+        )
+
+        if not succes:
+            return succes, message
+
+        return succes, ""

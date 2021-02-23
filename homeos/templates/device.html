@@ -17,12 +17,13 @@
             
                 {% include 'devices/components/color_picker.html' %}
 
-                <div id="program-selector">
+                <div class="program-selector">
                     <div style="height: 20px;"></div>
                     <h4>Program selector</h4>
                     <div style="height: 10px;"></div>
-                    <button onclick="start_program('blink')">Blink</button>
-                    <button onclick="start_program('sos')">Sos</button>
+                    <div id="programs">
+                        <!-- Program buttons will get build by JS -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,6 +52,12 @@
 
 <script>
     var device_active = {% if device.active %}true{% else %}false{% endif %};
+    var active_program = '{{ device.active_program }}';
+
+    var programs = [
+        'blink',
+        'sos'
+    ];
 
     function draw_toggle_button() {
         var button = $("#toggle-switch");
@@ -78,7 +85,38 @@
         if (!device_active) {
             toggle();
         }
-        post(window.location, {"action": "start_program", "program": program_name}, function(data) {});
+        post(window.location, {"action": "start_program", "program": program_name}, function(data) {
+            if ('active_program' in data) {
+                active_program = data['active_program'];
+                draw_programs();
+            }
+        });
     }
+
+    function toTitleCase(str) {
+        return str.replace(
+            /\w\S*/g,
+            function (txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+
+    function draw_programs() {
+        var programs_html = "";
+
+        console.log(programs);
+        programs.forEach(function(item) {
+            console.log(item);
+            programs_html += `<button id="${item}_program_button" onclick="start_program('${item}')">${toTitleCase(item)}</button>`;
+        });
+
+        console.log(programs_html);
+
+        $("#programs").html(programs_html);
+        $(`#${active_program}_program_button`).addClass("active");
+    }
+
+    draw_programs();
 </script>
 {% endblock content %}

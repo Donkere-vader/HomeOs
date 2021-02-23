@@ -68,6 +68,10 @@ class Device(db.Model):
     api_key = db.Column(db.String(45))
     address = db.Column(db.String(45))
 
+    # relationships
+    active_program = db.Column(db.String(45))
+    programs = db.relationships('program', backref='device', lazy=True)
+
     def __init__(self, id, icon, control, group, room):
         self.id, self.icon, self.control, self.group, self.room = id, icon, control, group, room
 
@@ -145,4 +149,14 @@ class Device(db.Model):
         if not succes:
             return succes, message
 
+        self.active_program = program_name
+        db.session.commit()
         return succes, ""
+
+
+class Program(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(45))
+
+    # relationships
+    device_id = db.Column(db.String(45), db.ForeignKey('device.id'))

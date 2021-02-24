@@ -41,7 +41,9 @@
         $("#card-icon-container").css("background-color", device_active ? `#${device_color}` : "#212121");
     }
 
-    build_card();
+    $(document).ready(function() {
+        build_card();
+    });
 </script>
 
 <script>
@@ -99,6 +101,8 @@
         });
     }
 
-    draw_programs();
+    $(document).ready(function() {
+        draw_programs();
+    });
 </script>
 {% endblock content %}

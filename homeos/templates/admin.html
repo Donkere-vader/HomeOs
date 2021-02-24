@@ -1,0 +1,16 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="../../../../static/css/admin.css">
+
+<main class="horizontal-center">
+    <div class="big-card admin-card">
+        <form method="POST">
+            <label for="code_input">Code</label>
+            <textarea name="code" id="code_input" rows="10"></textarea>
+
+            <input type="submit" value="run" class="submit">
+        </form>
+    </div>
+</main>
+{% endblock content %}

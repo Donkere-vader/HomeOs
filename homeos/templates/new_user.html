@@ -1,0 +1,30 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="../../../../static/css/form.css">
+
+<main class="horizontal-center">
+    <div class="big-card edge">
+        <form class="form" method="POST">
+            <h3>Create new user</h3>
+
+            {% if error %}
+            <span>{{ error }}</span>
+            {% endif %}
+
+            <label for="username_input">Username</label>
+            <input type="text" name="username" id="username_input" autocomplete="off">
+
+            <label for="password_input">Password</label>
+            <input type="password" name="password" id="password_input" autocomplete="off">
+
+            <label for="confirm_password_input">Confirm password</label>
+            <input type="password" name="confirm_password" id="confirm_password_input" autocomplete="off">
+
+            <div style="height: 20px;"></div>
+
+            <input id="submit_button" class="submit" type="submit" value="Create user">
+        </form>
+    </div>
+</main>
+{% endblock content %}

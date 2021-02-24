@@ -3,10 +3,18 @@
 {% block content %}
 <link rel="stylesheet" href="../../../../../static/css/program.css">
 
+{% if len(current_user.global_programs) == 0 %}
+<main class="center-center">
+    <div class="page-message">
+        <h4>You have no programs linked to your account</h4>
+        <p>Did you expect programs? Notify the system admin 👨‍💻</p>
+    </div>
+</main>
+{% else %}
 <main>
     <div class="cards">
     {% for program in current_user.global_programs %}
-        <div id="program_card_{{ program.name }}" class="card" onclick="toggle_program('{{ program.id }}', '{{ program.name }}')">
+        <div id="program_card_{{ program.name }}" class="card edge" onclick="toggle_program('{{ program.id }}', '{{ program.name }}')">
             {{ print_html(program.name) }}
         </div>
     {% endfor %}
@@ -67,4 +75,5 @@
         draw_program_cards();
     });
 </script>
+{% endif %}
 {% endblock content %}

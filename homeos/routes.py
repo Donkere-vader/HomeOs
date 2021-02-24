@@ -25,7 +25,8 @@ def unauth_handler():
 def inject_stage_and_region():
     return dict(
         enumerate=enumerate,
-        print_html=print_html
+        print_html=print_html,
+        len=len
     )
 
 
@@ -112,3 +113,24 @@ def programs():
             return jsonify(succes=succes, message=message, active=program.active)
 
     return render_template("programs.html")
+
+
+@app.route("/new_user", methods=["GET", "POST"])
+@login_required
+def new_user():
+    if not current_user.admin:
+        return redirect("../../../../")
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if password != confirm_password:
+            return render_template("new_user.html", error="Password's dont match")
+
+        user = User(username, password)
+        db.session.add(user)
+        db.session.commit()
+        return f"<span>User \"{username}\" created</span>"
+
+    return render_template("new_user.html")

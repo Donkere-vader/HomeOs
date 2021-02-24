@@ -27,18 +27,55 @@ header nav {
     justify-content: space-between;
 }
 
-header nav ul {
+header nav ul, #mobile-menu ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
     list-style: none;
 }
 
-header nav ul li, header nav ul li a {
+header nav ul li, header nav ul li a, #mobile-menu ul li, #mobile-menu ul li a {
     padding: 5px;
     color: #FFFFFF;
     text-decoration: none;
     font-weight: bold;
+}
+
+header .hamburger-icon-container {
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+header .hamburger-icon {
+    width: 25px;
+}
+
+#mobile-menu {
+    display: none;
+}
+
+#mobile-menu {
+    position: absolute;
+    background-color: #212121;
+    right: 10px;
+    top: 50px;
+    width: 200px;
+}
+
+#mobile-menu ul li a {
+    font-size: 20px;
+    padding: 10px 10px 10px 40px;
+}
+
+#mobile-menu hr {
+    width: 100%;
+    color: #FFFFFF;
+}
+
+#mobile-menu ul {
+    flex-direction: column;
+    align-items: end;
 }
 
 /* MAIN */
@@ -58,6 +95,11 @@ main {
     border-radius: 10px;
     box-shadow: 0px 0px 10px #212121;
     width: 100%;
+}
+
+.big-card.edge, .card.edge {
+    border: 1px solid #424242;
+    padding: 20px;
 }
 
 .icon-container {
@@ -152,8 +194,17 @@ main {
     align-items: center;
 }
 
+.page-message {
+    font-size: 20px;
+    text-align: center;
+}
+
 
 /* RESPONSIVENESS */
+.hamburger-icon-container {
+    display: none;
+}
+
 @media only screen and (max-width: 1500px) {
     main {
         margin: 20px 100px;
@@ -163,6 +214,12 @@ main {
 @media only screen and (max-width: 1000px) {
     main {
         margin: 20px 50px;
+    }
+    .hamburger-icon-container {
+        display: flex;
+    }
+    .desktop-menu {
+        display: none;
     }
 }
 

@@ -1,8 +1,17 @@
 {% extends 'template.html' %}
 
 {% block content %}
+{% if len(current_user.devices) == 0 %}
+<main class="center-center">
+    <div class="page-message">
+        <h4>You have no devices linked to your account</h4>
+        <p>Did you expect devices? Notify the system admin 👨‍💻</p>
+    </div>
+</main>
+{% else %}
 <main>
     <div class="cards">
+
     {% for device in current_user.devices %}
         <a class="device-card clickable no-link" href="../../../../dev/{{ device.id }}">
             <div class="icon-container" style="background-color: {% if device.active %}#{{ device.color }}{% else %}#212121{% endif %}">
@@ -22,4 +31,5 @@
     {% endfor %}
     </div>
 </main>
+{% endif %}
 {% endblock content %}

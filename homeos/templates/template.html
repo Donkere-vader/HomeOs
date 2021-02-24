@@ -22,21 +22,41 @@
     <header>
         <nav>
             <h1><a class="no-link" href="../../../../">Home Os</a></h1>
-            <ul>
+            <ul class="desktop-menu">
                 <li><a href="../../../../">Devices</a></li>
                 <li><a href="../../../../programs">Programs</a></li>
                 {% if current_user.admin %}
                 <li><a href="../../../../admin">Admin</a></li>
+                <li><a href="../../../../new_user">New user</a></li>
                 {% endif %}
             </ul>
-            <ul>
+            <ul class="desktop-menu">
                 <li><a href="../../../../logout">Logout</a></li>
             </ul>
+            <div class="hamburger-icon-container" onclick="toggle_menu()">
+                <img class="hamburger-icon" src="../../../../static/media/icons/hamburger_menu.svg" alt="">
+            </div>
         </nav>
     </header>
 
     {% block content %}
     {% endblock content %}
+
+    <div id="mobile-menu" class="card edge">
+        <ul>
+            <li><a href="../../../../">Devices</a></li>
+            <li><a href="../../../../programs">Programs</a></li>
+            {% if current_user.admin %}
+            <li><a href="../../../../admin">Admin</a></li>
+            <li><a href="../../../../new_user">New user</a></li>
+            {% endif %}
+        </ul>
+        <div style="height: 20px;"></div>
+        <hr>
+        <ul>
+            <li><a href="../../../../logout">Logout</a></li>
+        </ul>
+    </div>
 
     <div id="error-message-popup">
         <span id="error-message"></span>
@@ -48,6 +68,20 @@
         function show_error(message) {
             $("#error-message").html(message);
             $("#error-message-popup").fadeIn().delay(5000).fadeOut();
+        }
+
+        // MENU
+        var showing_menu = false;
+
+        function toggle_menu() {
+            showing_menu = !showing_menu;
+            var menu = $("#mobile-menu");
+
+            if (showing_menu) {
+                menu.fadeIn();
+            } else {
+                menu.fadeOut();
+            }
         }
     </script>
 </body>

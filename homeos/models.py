@@ -7,6 +7,38 @@ import random
 import requests
 import json
 
+# MANY TO MANY
+user_devices = db.Table(
+    'user_devices', db.Model.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('device_id', db.String, db.ForeignKey('device.id'))
+)
+
+user_programs = db.Table(
+    'user_programs', db.Model.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('program_id', db.Integer, db.ForeignKey('program.id'))
+)
+
+user_global_programs = db.Table(
+    'user_global_programs', db.Model.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey("user.id")),
+    db.Column('program_id', db.Integer, db.ForeignKey('global_program.id'))
+)
+
+device_programs = db.Table(
+    'device_programs', db.Model.metadata,
+    db.Column('device_id', db.String, db.ForeignKey('device.id')),
+    db.Column('program_id', db.Integer, db.ForeignKey('program.id'))
+)
+
+global_program_devices = db.Table(
+    'global_program_devices', db.Model.metadata,
+    db.Column('device_id', db.String, db.ForeignKey('device.id')),
+    db.Column('global_program_id', db.Integer, db.ForeignKey("global_program.id"))
+)
+
+# TABLES
 
 class User(db.Model, UserMixin):
     """
@@ -19,11 +51,16 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(45), unique=True)
     password_hash = db.Column(db.LargeBinary())
     is_active = db.Column(db.Boolean)
+    admin = db.Column(db.Boolean, default=False)  # only me ofc 😌
 
-    def __init__(self, username: str, password: str):
+    devices = db.relationship("Device", secondary=user_devices, backref="users")
+    programs = db.relationship("Program", secondary=user_programs, backref="users")
+    global_programs = db.relationship("GlobalProgram", secondary=user_global_programs, backref="users")
+
+    def __init__(self, username: str, password: str, admin=False):
         salt = bcrypt.gensalt()
         password_hash = bcrypt.hashpw(password.encode(), salt)
-        self.username, self.password_hash, self.is_active = username, password_hash, True
+        self.username, self.password_hash, self.is_active, self.admin = username, password_hash, True, admin
 
     def get_id(self):
         return self.id
@@ -70,7 +107,7 @@ class Device(db.Model):
 
     # relationships
     active_program = db.Column(db.String(45))
-    programs = db.relationship('Program', backref='device', lazy=True)
+    programs = db.relationship("Program", secondary=device_programs, backref="devices")
 
     def __init__(self, id, icon, control, group, room):
         self.id, self.icon, self.control, self.group, self.room = id, icon, control, group, room
@@ -160,5 +197,8 @@ class Program(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(45))
 
-    # relationships
-    device_id = db.Column(db.String(45), db.ForeignKey('device.id'))
+class GlobalProgram(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.String(45))
+
+    devices = db.relationship("Device", secondary=global_program_devices, backref="global_programs")

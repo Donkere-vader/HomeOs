@@ -22,7 +22,9 @@
                     <h4>Program selector</h4>
                     <div style="height: 10px;"></div>
                     <div id="programs">
-                        <!-- Program buttons will get build by JS -->
+                        {% for program in device.programs %}
+                        <button id="{{ program.name }}_program_button" onclick="start_program('{{ program.name }}')">{{ print_html(program.name) }}</button>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -85,24 +87,16 @@
         });
     }
 
-    function toTitleCase(str) {
-        return str.replace(
-            /\w\S*/g,
-            function (txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            }
-        );
-    }
-
     function draw_programs() {
-        var programs_html = "";
 
-        programs.forEach(function(item) {
-            programs_html += `<button id="${item}_program_button" onclick="start_program('${item}')">${toTitleCase(item)}</button>`;
+        programs.forEach(function(program_name) {
+            var program_button = $(`#${program_name}_program_button`);
+            if (active_program == program_name) {
+                program_button.addClass('active');
+            } else {
+                program_button.removeClass('active');
+            }
         });
-
-        $("#programs").html(programs_html);
-        $(`#${active_program}_program_button`).addClass("active");
     }
 
     draw_programs();

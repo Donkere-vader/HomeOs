@@ -3,7 +3,7 @@
 {% block content %}
 <main>
     <div class="device-cards">
-    {% for device in devices %}
+    {% for device in current_user.devices %}
         <a class="device-card clickable no-link" href="../../../../dev/{{ device.id }}">
             <div class="icon-container" style="background-color: {% if device.active %}#{{ device.color }}{% else %}#212121{% endif %}">
                 <img class="icon" src="../../../../../static/media/icons/{{ device.icon }}.svg" alt="">

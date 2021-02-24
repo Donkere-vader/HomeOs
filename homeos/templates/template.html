@@ -23,6 +23,13 @@
         <nav>
             <h1><a class="no-link" href="../../../../">Home Os</a></h1>
             <ul>
+                <li><a href="../../../../">Devices</a></li>
+                <li><a href="../../../../programs">Programs</a></li>
+                {% if current_user.admin %}
+                <li><a href="../../../../admin">Admin</a></li>
+                {% endif %}
+            </ul>
+            <ul>
                 <li><a href="../../../../logout">Logout</a></li>
             </ul>
         </nav>

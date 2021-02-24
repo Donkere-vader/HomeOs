@@ -1,9 +1,10 @@
-from .models import User, Device
+from .models import User, Device, GlobalProgram
 from flask import current_app as app
 from flask import render_template, request, redirect, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from datetime import timedelta
 from . import db
+from .functions import print_html
 
 
 login_manager = LoginManager(app)
@@ -23,18 +24,22 @@ def unauth_handler():
 @app.context_processor
 def inject_stage_and_region():
     return dict(
-        enumerate=enumerate
+        enumerate=enumerate,
+        print_html=print_html
     )
 
 
 @app.route("/")
 @login_required
 def index():
-    return render_template("index.html", devices=Device.query.all())
+    return render_template("index.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    # db.session.add(User("cassis", "password", admin=True))
+    # db.session.commit()
+
     if request.method == "POST":
         username, password = request.form['username'], request.form['password']
 
@@ -47,6 +52,20 @@ def login():
         return render_template("public/login.html", error="Invalid username or password")
     return render_template("public/login.html")
 
+@app.route("/admin", methods=["GET", "POST"])
+@login_required
+def admin_panel():
+    if not current_user.admin:
+        return redirect("../../../../")
+    if request.method == "POST":
+        code = request.form['code']
+        code = [line for line in code.split("\r\n") if line]
+
+        for line in code:
+            exec(line)
+
+        return f"<h3>submitted:</h3><code>{code}</code>"
+    return render_template("admin.html")
 
 @app.route("/logout")
 @login_required
@@ -75,7 +94,21 @@ def dev(device_id):
             return jsonify(succes=succes, message=message, color=device.color)
 
         elif action == "start_program":
-            succes, message = device.start_program(request.form['program'])
+            succes, message = device.toggle_program(request.form['program'])
             return jsonify(succes=succes, message=message, active_program=device.active_program)
 
     return render_template("device.html", device=device)
+
+
+@app.route("/programs", methods=["GET", "POST"])
+@login_required
+def programs():
+    if request.method == "POST":
+        action = request.form['action']
+
+        if action == 'toggle_program':
+            program = GlobalProgram.query.filter_by(id=request.form['program_id']).first()
+            succes, message = program.toggle_program()
+            return jsonify(succes=succes, message=message, active=program.active)
+
+    return render_template("programs.html")

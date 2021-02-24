@@ -1,0 +1,70 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="../../../../../static/css/program.css">
+
+<main>
+    <div class="cards">
+    {% for program in current_user.global_programs %}
+        <div id="program_card_{{ program.name }}" class="card" onclick="toggle_program('{{ program.id }}', '{{ program.name }}')">
+            {{ print_html(program.name) }}
+        </div>
+    {% endfor %}
+    </div>
+</main>
+
+<script>
+    var active_programs = [];
+    var programs = [];
+
+    {% for program in current_user.global_programs %}
+    programs.push("{{ program.name }}");
+    {% if program.active %}
+
+    active_programs.push("{{ program.name }}");
+
+    {% endif %}
+    {% endfor %}
+
+    function array_remove(arr, value) { 
+        return arr.filter(function(ele){ 
+            return ele != value; 
+        });
+    }
+
+    function toggle_program(program_id, program_name) {
+        console.log(`${active_programs.indexOf(program_name) >= 0 ? 'stopping' : 'starting'} program: ${program_name}`);
+
+        post(window.location, {"action": "toggle_program", "program_id": program_id}, function(data) {
+            if ('active' in data) {
+                var active = data['active'];
+                if (active) {
+                    active_programs.push(program_name);
+                } else {
+                    active_programs = array_remove(active_programs, program_name);
+                }
+                draw_program_cards();
+            }
+        })
+
+
+        draw_program_cards();
+    }
+
+    function draw_program_cards() {
+        programs.forEach(function(program_name) {
+            var card = $(`#program_card_${program_name}`);
+            if (active_programs.indexOf(program_name) >= 0) {
+                card.addClass("active");
+            } else {
+                card.removeClass("active");
+            }
+        });
+    }
+
+    $(document).ready(function() {
+
+        draw_program_cards();
+    });
+</script>
+{% endblock content %}

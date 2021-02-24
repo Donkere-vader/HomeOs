@@ -1,0 +1,13 @@
+.admin-card {
+    border: 1px solid #424242;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-card textarea {
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid #424242;
+}

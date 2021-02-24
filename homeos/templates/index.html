@@ -2,7 +2,7 @@
 
 {% block content %}
 <main>
-    <div class="device-cards">
+    <div class="cards">
     {% for device in current_user.devices %}
         <a class="device-card clickable no-link" href="../../../../dev/{{ device.id }}">
             <div class="icon-container" style="background-color: {% if device.active %}#{{ device.color }}{% else %}#212121{% endif %}">

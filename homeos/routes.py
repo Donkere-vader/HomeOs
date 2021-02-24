@@ -4,6 +4,7 @@ from flask import render_template, request, redirect, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from datetime import timedelta
 from . import db
+from .functions import print_html
 
 
 login_manager = LoginManager(app)
@@ -23,7 +24,8 @@ def unauth_handler():
 @app.context_processor
 def inject_stage_and_region():
     return dict(
-        enumerate=enumerate
+        enumerate=enumerate,
+        print_html=print_html
     )
 
 
@@ -92,15 +94,21 @@ def dev(device_id):
             return jsonify(succes=succes, message=message, color=device.color)
 
         elif action == "start_program":
-            succes, message = device.start_program(request.form['program'])
+            succes, message = device.toggle_program(request.form['program'])
             return jsonify(succes=succes, message=message, active_program=device.active_program)
 
     return render_template("device.html", device=device)
 
 
 @app.route("/programs", methods=["GET", "POST"])
+@login_required
 def programs():
     if request.method == "POST":
-        pass
+        action = request.form['action']
 
-    return render_template("program.html", programs=GlobalProgram.query.all())
+        if action == 'toggle_program':
+            program = GlobalProgram.query.filter_by(id=request.form['program_id']).first()
+            succes, message = program.toggle_program()
+            return jsonify(succes=succes, message=message, active=program.active)
+
+    return render_template("programs.html")

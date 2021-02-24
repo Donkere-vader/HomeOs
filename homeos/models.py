@@ -179,16 +179,16 @@ class Device(db.Model):
         db.session.commit()
         return True, ""
 
-    def start_program(self, program_name):
+    def toggle_program(self, program_name, on=True):
         succes, message = self.send(
-            action="start_program",
+            action="start_program" if self.on else "strop_program",
             data={"program": program_name}
         )
 
         if not succes:
             return succes, message
 
-        self.active_program = program_name
+        self.active_program = program_name if self.on else ""
         db.session.commit()
         return succes, ""
 
@@ -200,5 +200,18 @@ class Program(db.Model):
 class GlobalProgram(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(45))
+    active = db.Column(db.Boolean)
 
     devices = db.relationship("Device", secondary=global_program_devices, backref="global_programs")
+
+    def toggle_program(self):
+        self.active = not self.active
+        if self.active:
+            for device in self.devices:
+                device.toggle_program(self.name, on=False)
+        else:
+            for device in self.devices:
+                device.toggle_program(self.name)
+
+        db.session.commit()
+        return True, ""

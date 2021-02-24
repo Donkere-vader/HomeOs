@@ -1,4 +1,4 @@
-from .models import User, Device
+from .models import User, Device, GlobalProgram
 from flask import current_app as app
 from flask import render_template, request, redirect, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -35,6 +35,9 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    # db.session.add(User("cassis", "password", admin=True))
+    # db.session.commit()
+
     if request.method == "POST":
         username, password = request.form['username'], request.form['password']
 
@@ -47,6 +50,20 @@ def login():
         return render_template("public/login.html", error="Invalid username or password")
     return render_template("public/login.html")
 
+@app.route("/admin", methods=["GET", "POST"])
+@login_required
+def admin_panel():
+    if not current_user.admin:
+        return redirect("../../../../")
+    if request.method == "POST":
+        code = request.form['code']
+        code = [line for line in code.split("\r\n") if line]
+
+        for line in code:
+            exec(line)
+
+        return f"<h3>submitted:</h3><code>{code}</code>"
+    return render_template("admin.html")
 
 @app.route("/logout")
 @login_required
@@ -79,3 +96,11 @@ def dev(device_id):
             return jsonify(succes=succes, message=message, active_program=device.active_program)
 
     return render_template("device.html", device=device)
+
+
+@app.route("/programs", methods=["GET", "POST"])
+def programs():
+    if request.method == "POST":
+        pass
+
+    return render_template("program.html", programs=GlobalProgram.query.all())

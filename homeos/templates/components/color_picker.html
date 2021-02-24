@@ -1,0 +1,51 @@
+<div class="color-picker">
+    <div style="height: 20px;"></div>
+    <h4>Color picker</h4>
+    <div style="height: 10px;"></div>
+    <div id="picker-container" class="picker-container">
+        
+    </div>
+    <input type="color" name="color" id="color_input" value="#{{ device.color }}" style="display: none;">
+
+</div>
+
+<script>
+    var colors = [
+        'FF0000',
+        '00FF00',
+        '0000FF',
+        'FFFF00',
+        'FF00FF',
+        '00FFFF'
+    ];
+
+    function build_color_picker() {
+        var color_selectors = "";
+
+        colors.forEach(function(color) {
+            color_selectors += `<div id="color_selector_${color}" style="background-color: #${color};" onclick="update_color('${color}')" class="color-selector"></div>`;
+        });
+
+        $("#picker-container").html(color_selectors);
+
+        $(`#color_selector_${device_color}`).html(
+            "<img src=\"../../../../static/media/icons/check.svg\" />"
+        );
+    }
+
+    function update_color(color) {
+        var data = {action: "set_color", color: color};
+        console.log(data);
+        post(window.location, data, function(data) {
+            if ('color' in data) {
+                device_color = data['color'];
+                build_card();
+                build_color_picker();
+            }
+        })
+    }
+
+    $(document).ready(function() {
+        build_color_picker();
+    });
+</script>

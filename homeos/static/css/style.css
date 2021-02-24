@@ -231,13 +231,13 @@ main {
     header {
         padding: 10px 20px;
     }
-    .device-cards {
+    .cards {
         grid-template-columns: 1fr 1fr;
     }
 }
 
 @media only screen and (max-width: 500px) {
-    .device-cards {
+    .cards {
         grid-template-columns: 1fr;
     }
 }

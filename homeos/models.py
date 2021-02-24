@@ -163,6 +163,7 @@ class Device(db.Model):
             return succes, message
 
         self.active = on
+        self.active_program = ""
         db.session.commit()
         return succes, ""
 
@@ -177,6 +178,10 @@ class Device(db.Model):
                 return succes, message
 
         self.color = color
+        if self.group == 'light':
+            self.active_program = ""
+            self.active = True
+
         db.session.commit()
         return True, ""
 
@@ -189,7 +194,7 @@ class Device(db.Model):
         if not succes:
             return succes, message
 
-        self.active_program = program_name if self.on else ""
+        self.active_program = program_name if on else ""
         db.session.commit()
         return succes, ""
 

@@ -69,8 +69,10 @@
             console.log(action);
             if ('active' in data) {
                 device_active = data['active'];
+                active_program = "";
                 draw_toggle_button();
                 build_card();
+                draw_programs();
             }
         })
     }
@@ -90,7 +92,6 @@
     }
 
     function draw_programs() {
-
         programs.forEach(function(program_name) {
             var program_button = $(`#${program_name}_program_button`);
             if (active_program == program_name) {

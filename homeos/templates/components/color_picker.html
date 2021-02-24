@@ -36,12 +36,16 @@
 
     function update_color(color) {
         var data = {action: "set_color", color: color};
-        console.log(data);
+
         post(window.location, data, function(data) {
             if ('color' in data) {
                 device_color = data['color'];
+                device_active = true;
+                active_program = "";
                 build_card();
                 build_color_picker();
+                draw_toggle_button();
+                draw_programs();
             }
         })
     }

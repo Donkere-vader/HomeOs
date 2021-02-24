@@ -15,7 +15,7 @@
             <div class="device-control">
                 <button id="toggle-switch" onclick="toggle()"></button>
             
-                {% include 'devices/components/color_picker.html' %}
+                {% include 'components/color_picker.html' %}
 
                 <div class="program-selector">
                     <div style="height: 20px;"></div>
@@ -35,16 +35,8 @@
     var device_active = {% if device.active %}true{% else %}false{% endif %};
     var device_color = "{{ device.color }}";
 
-    function get_device_color() {
-        var color_input = $("#color_input");
-        if (color_input.length) { // if color input exists
-            device_color = color_input.val();
-        }
-        return device_color;
-    }
-
     function build_card() {
-        $("#card-icon-container").css("background-color", device_active ? get_device_color() : "#212121");
+        $("#card-icon-container").css("background-color", device_active ? `#${device_color}` : "#212121");
     }
 
     build_card();

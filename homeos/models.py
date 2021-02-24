@@ -140,6 +140,7 @@ class Device(db.Model):
             )
         except requests.exceptions.ConnectionError:
             self.active = False
+            self.active_program = ""
             db.session.commit()
             return False, f"Can't connect to device '{self.name}'"
         return True, ""
@@ -181,7 +182,7 @@ class Device(db.Model):
 
     def toggle_program(self, program_name, on=True):
         succes, message = self.send(
-            action="start_program" if self.on else "strop_program",
+            action="start_program" if on else "strop_program",
             data={"program": program_name}
         )
 

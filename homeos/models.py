@@ -102,6 +102,8 @@ class Device(db.Model):
                 req_data
             )
         except requests.exceptions.ConnectionError:
+            self.active = False
+            db.session.commit()
             return False, f"Can't connect to device '{self.name}'"
         return True, ""
 
